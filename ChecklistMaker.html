@@ -1,0 +1,210 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<style>
+.content{
+	margin-top: 0.5 rem;
+    align-content: center;
+    background-color: #e1eeff;
+    border-radius: 12px;
+    box-shadow: 0px 0px 4px 1px blue;
+}
+.heading{
+	font-size:25px;
+	font-weight:700;
+}
+#checklist-table{
+	width: 90%;
+	margin: 30px auto;
+}
+
+.item-entry-field{
+	width:80%;
+	padding: 5px 0px;
+}
+
+.item-text, .item-label{
+	width:80%;
+	margin: 5px 0px;
+}
+input[type="checkbox"]{
+	width: 25px;
+	height: 25px;
+	transform: translateY(3px);
+}
+
+.editBtn{
+	cursor: pointer;
+}
+
+</style>
+<script>
+function addItem(){
+	var rowCnt = document.getElementById('rowCnt');
+    rowCnt.value = parseInt(rowCnt.value) + 1;
+	var tr='<tr id="'+rowCnt.value+'"><td><input type="checkbox"></input></td><td>'+rowCnt.value+'.</td><td><span class="item-entry-field"><input type="text" class="item-text" placeholder="Enter Item Description" id="item'+rowCnt.value+'" onblur="saveEdit(this.parentNode.parentNode.parentNode.id)" onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input></span><span class="item-label"id="itemPre'+rowCnt.value+'"></span></td><td><i class="fas fa-edit editBtn" onclick="editValue(this.parentNode.parentNode.id)"></i></td></tr>';
+	document.getElementById('checklist-table-body').innerHTML += tr;
+}
+
+function removeLastRow(){
+	
+	var rowCnt = document.getElementById('rowCnt');
+    if(rowCnt.value != 1){
+       	rowCnt.value = parseInt(rowCnt.value) - 1;
+		document.getElementById('checklist-table').deleteRow(rowCnt.value);
+    }else{
+    	alert('Can\'t remove the only row!');
+    }
+}
+
+function saveEdit(cnt){
+	
+	if(document.getElementById('item'+cnt).value != ''){
+      document.getElementById('itemPre'+cnt).innerHTML = document.getElementById('item'+cnt).value;
+      document.getElementById('item'+cnt).style.display = 'none';
+      document.getElementById('itemPre'+cnt).style.display = 'block';
+      addItem();
+      var nextItemCnt = (parseInt(cnt)+1);
+      document.getElementById('item'+nextItemCnt).focus();	//Focus onto newly added row
+    }
+}
+
+function editValue(cnt){
+	document.getElementById('itemPre'+cnt).innerHTML = '';
+	document.getElementById('item'+cnt).style.display = 'block';
+	document.getElementById('itemPre'+cnt).style.display = 'none';
+	document.getElementById('item'+cnt).focus();
+}
+
+function saveOnEnterKeyPress(e, cnt){
+    if(e.keyCode === 13){
+        e.preventDefault(); // Ensure it is only this code that runs
+        saveEdit(cnt);
+    }
+}
+
+function printCheckList(){
+	var unfilledCount = checkkAllFilled();
+	if(unfilledCount == 0){
+		
+
+		var editBtnsArray = document.getElementsByClassName('editBtn');
+
+	    for(var i = 0; i < editBtnsArray.length; i++){
+	    	editBtnsArray[i].style.display = 'none';
+	    }
+		
+		document.getElementById('menu').style.display = 'none';
+		window.print();
+
+
+	    for(var i = 0; i < editBtnsArray.length; i++){
+	    	editBtnsArray[i].style.display = 'inline-block';
+	    }
+		
+		document.getElementById('menu').style.display = 'flex';
+		
+		
+		
+	}
+	else{
+		alert(unfilledCount + ' field(s) are not filled. Kindly either fill them or remove them before printing.');
+	}
+}
+
+function checkkAllFilled(){
+	var unfilledCount = 0;
+	var oInputs = new Array();
+	oInputs = document.getElementsByTagName('input') // store collection of all <input/> elements
+
+	for ( i = 0; i < oInputs.length; i++ )
+	{ 
+	    // loop through and find <input type="text"/>
+	    if ( oInputs[i].type == 'text' && oInputs[i].style.display != 'none' )
+	    {
+	    	if(oInputs[i].value == ''){
+	    		unfilledCount++;
+	    	}
+	    }
+	}
+	return unfilledCount;
+}
+
+</script>
+
+
+
+</head>
+<body>
+<div class="container mt-5">
+	<div class="row">
+        <div class="col-sm-12">
+        	
+            <div class="content">
+                <div class="row">
+               		<div class="col-sm-12 text-center">
+						<span id="heading" class="heading">
+		                	Checklist
+		                </span>
+	                </div>
+                </div>
+                <div id="menu" class="row text-center mt-3 mb-3">
+               		<div class="col-sm-3">
+                    	<button class="btn btn-outline-success" onclick="addItem();">Add Item</button>
+                    </div>
+                    <div class="col-sm-5">
+                    	<button class="btn btn-outline-danger" onclick="removeLastRow();">Remove Last Item</button>
+                    </div>
+                    <div class="col-sm-3">
+                    	<button class="btn btn-outline-primary" onclick="printCheckList();">Print List</button>
+                    </div>
+				</div>
+                
+                <table id="checklist-table">
+                	<tbody id="checklist-table-body">
+                    	<tr id="1">
+                        	<td style="width: 5%;">
+                            	<input type="checkbox"></input>
+                            </td>
+                        	<td style="width: 5%;">
+                            	1.
+                            </td>
+                            <td style="width: 80%;" class="item-entry-field">
+                            	<span>
+                                	<input type="text" class="item-text" placeholder="Enter Item Description" id="item1" 
+                                	onblur="saveEdit(this.parentNode.parentNode.parentNode.id)" onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input>
+                                </span>
+                            	<span class="item-label" id="itemPre1">
+                                	
+                                </span>
+                            </td>
+                            <td style="width: 15%;">
+                            	<i class="fas fa-edit editBtn" onclick="editValue(this.parentNode.parentNode.id)"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+			</div>
+            
+        </div>
+	</div>
+	
+</div>
+<input type="hidden" id="rowCnt" value="1"></input>
+</body>
+
+</html>
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12"></div>
+	</div>
+</div>
