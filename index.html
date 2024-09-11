@@ -45,7 +45,7 @@ input[type="checkbox"]{
 function addItem(){
 	var rowCnt = document.getElementById('rowCnt');
     rowCnt.value = parseInt(rowCnt.value) + 1;
-	var tr='<tr id="'+rowCnt.value+'"><td><input type="checkbox"></input></td><td>'+rowCnt.value+'.</td><td><span class="item-entry-field"><input type="text" class="item-text" placeholder="Enter Item Description" id="item'+rowCnt.value+'" onblur="saveEdit(this.parentNode.parentNode.parentNode.id)" onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input></span><span class="item-label"id="itemPre'+rowCnt.value+'"></span></td><td><i class="fas fa-edit editBtn" onclick="editValue(this.parentNode.parentNode.id)"></i></td></tr>';
+	var tr='<tr id="'+rowCnt.value+'"><td><input type="checkbox"></input></td><td>'+rowCnt.value+'.</td><td><span class="item-entry-field"><input type="text" class="item-text" placeholder="Enter Item Description & Press ENTER To Save" id="item'+rowCnt.value+'" onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input></span><span class="item-label"id="itemPre'+rowCnt.value+'"></span></td><td><i class="fas fa-edit editBtn" onclick="editValue(this.parentNode.parentNode.id)"></i></td></tr>';
 	document.getElementById('checklist-table-body').innerHTML += tr;
 }
 
@@ -174,8 +174,8 @@ function checkkAllFilled(){
                             </td>
                             <td style="width: 80%;" class="item-entry-field">
                             	<span>
-                                	<input type="text" class="item-text" placeholder="Enter Item Description" id="item1" 
-                                	onblur="saveEdit(this.parentNode.parentNode.parentNode.id)" onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input>
+                                	<input type="text" class="item-text" placeholder="Enter Item Description & Press ENTER To Save" id="item1" 
+                                	 onkeypress="saveOnEnterKeyPress(event, this.parentNode.parentNode.parentNode.id)"></input>
                                 </span>
                             	<span class="item-label" id="itemPre1">
                                 	
